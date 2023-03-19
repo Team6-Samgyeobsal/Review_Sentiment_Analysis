@@ -4,16 +4,17 @@ from konlpy.tag import Okt
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
+
 stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍',
              '과', '도', '를', '을', '으로', '자', '에', '와', '한', '하다', '랑']
 
 okt = Okt()
 
 max_len = 30
-loaded_model = load_model('../best_model.h5')
+loaded_model = load_model('model/best_model.h5')
 
 
-with open('../tokenizer.pickle', 'rb') as handle:
+with open('model/tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 # 위의 코드는 저장된 Tokenizer 객체를 불러오는 부분이고, Tokenizer 객체를 훈련코드에서 저장해줘야 합니다.
@@ -37,10 +38,11 @@ def sentiment_predict(s):
     padded = pad_sequences(encoded, maxlen=max_len)  # 패딩
     score = float(loaded_model.predict(padded))
     print(score)
-    if (score > 0.5):
-        print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
-    else:
-        print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
+    return str(score)
+    # if (score > 0.5):
+    #     print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
+    # else:
+    #     print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
 
 
 sentiment_predict('조금 재밌음')

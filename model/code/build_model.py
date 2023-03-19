@@ -14,9 +14,9 @@ import pickle
 
 
 train_data = pd.read_csv(
-    filepath_or_buffer="../data/ratings_train.txt", sep="\t")
+    filepath_or_buffer="model/data/ratings_train.txt", sep="\t")
 test_data = pd.read_csv(
-    filepath_or_buffer="../data/ratings_test.txt", sep="\t")
+    filepath_or_buffer="model/data/ratings_test.txt", sep="\t")
 
 print('데이터 불러오기')
 print(train_data.shape)
@@ -89,10 +89,6 @@ print("데이터 정규화")
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(X_train)
 
-# 생성된 tokenizer를 tokenizer.pickle 파일로 저장
-with open('../tokenizer.pickle', 'wb') as f:
-    pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
-
 # 전체 훈련 데이터에서 등장 빈도가 높은 순서대로 부여됨
 
 threshold = 3
@@ -124,7 +120,7 @@ tokenizer = Tokenizer(vocab_size)
 tokenizer.fit_on_texts(X_train)
 
 # 생성한 단어 사전 저장
-with open('../tokenizer.pickle', 'wb') as f:
+with open('model/tokenizer.pickle', 'wb') as f:
     pickle.dump(tokenizer.word_index, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 X_train = tokenizer.texts_to_sequences(X_train)
@@ -163,12 +159,12 @@ model.add(LSTM(128))
 model.add(Dense(1, activation='sigmoid'))
 
 es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=4)
-mc = ModelCheckpoint('../best_model.h5', monitor='val_acc',
+mc = ModelCheckpoint('model/best_model.h5', monitor='val_acc',
                      mode='max', verbose=1, save_best_only=True)
 
 model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
 history = model.fit(X_train, y_train, epochs=15, callbacks=[
                     es, mc], batch_size=60, validation_split=0.2)
 
-loaded_model = load_model('../best_model.h5')
+loaded_model = load_model('model/best_model.h5')
 print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
