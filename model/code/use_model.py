@@ -5,18 +5,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
-stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍',
-             '과', '도', '를', '을', '으로', '자', '에', '와', '한', '하다', '랑']
-
-okt = Okt()
-
-max_len = 30
-loaded_model = load_model('model/best_model.h5')
-
-
-with open('model/tokenizer.pickle', 'rb') as handle:
-    tokenizer = pickle.load(handle)
-
 # 위의 코드는 저장된 Tokenizer 객체를 불러오는 부분이고, Tokenizer 객체를 훈련코드에서 저장해줘야 합니다.
 # 훈련코드에서 거의 마지막 부분에 load_model('best_model.h5') 전후에 아래 코드를 넣어주세요.
 # 그럼 Tokenizer 객체에 담긴 어휘 분석 정보가 현재 폴더의 tokenizer.pickle에 저장됩니다.
@@ -28,6 +16,17 @@ with open('model/tokenizer.pickle', 'rb') as handle:
 
 # 리뷰 예측해 보기
 def sentiment_predict(s):
+    stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍',
+                 '과', '도', '를', '을', '으로', '자', '에', '와', '한', '하다', '랑']
+
+    okt = Okt()
+
+    max_len = 30
+    loaded_model = load_model('model/best_model.h5')
+
+    with open('model/tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+
     s = re.sub("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]", "", s)
     s = re.sub('^ +', "", s)
 
@@ -45,8 +44,8 @@ def sentiment_predict(s):
     #     print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
 
 
-sentiment_predict('조금 재밌음')
-sentiment_predict("많이 재밌음")
-sentiment_predict("이딴게 영화냐 ㅉㅉ")
-sentiment_predict("감독 뭐하는 놈이냐?")
-sentiment_predict('와 개쩐다 정말 세계관 최강자들의 영화다')
+# sentiment_predict('조금 재밌음')
+# sentiment_predict("많이 재밌음")
+# sentiment_predict("이딴게 영화냐 ㅉㅉ")
+# sentiment_predict("감독 뭐하는 놈이냐?")
+# sentiment_predict('와 개쩐다 정말 세계관 최강자들의 영화다')
