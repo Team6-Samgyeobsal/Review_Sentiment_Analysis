@@ -13,9 +13,9 @@ import pickle
 
 
 train_data = pd.read_csv(
-    filepath_or_buffer="model/data/ratings_train.txt", sep="\t")
+    filepath_or_buffer="model/data/kakao_review_content2.csv", sep=",")
 test_data = pd.read_csv(
-    filepath_or_buffer="model/data/ratings_test.txt", sep="\t")
+    filepath_or_buffer="model/data/kakao_review_content.csv", sep=",")
 
 print('데이터 불러오기')
 print(train_data.shape)
@@ -115,11 +115,15 @@ print("전체 등장 빈도에서 희귀 단어 등장 빈도 비율:", (rare_fr
 vocab_size = total_cnt - rare_cnt + 1
 print(vocab_size)
 
-tokenizer = Tokenizer(vocab_size)
+tokenizer = Tokenizer(num_words=vocab_size)
 tokenizer.fit_on_texts(X_train)
 
 # 생성한 단어 사전 저장
 with open('model/tokenizer.pickle', 'wb') as f:
+    pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+# 단어 사전 딕셔너리 저장
+with open('model/word_index.pickle', 'wb') as f:
     pickle.dump(tokenizer.word_index, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 X_train = tokenizer.texts_to_sequences(X_train)

@@ -27,6 +27,12 @@ def sentiment_predict(s):
     with open('model/tokenizer.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
 
+    # 단어 사전 딕셔너리 불러오기
+    with open('model/word_index.pickle', 'rb') as f:
+        word_index = pickle.load(f)
+
+    tokenizer.word_index = word_index
+
     s = re.sub("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]", "", s)
     s = re.sub('^ +', "", s)
 
@@ -37,15 +43,24 @@ def sentiment_predict(s):
     padded = pad_sequences(encoded, maxlen=max_len)  # 패딩
     score = float(loaded_model.predict(padded))
     print(score)
-    return str(score)
+    res = ''
+    if (score < 0.2):
+        res = '1'
+    elif (score < 0.4):
+        res = '2'
+    elif (score < 0.6):
+        res = '3'
+    elif (score < 0.8):
+        res = '4'
+    else:
+        res = '5'
+    return res
+
     # if (score > 0.5):
     #     print("{:.2f}% 확률로 긍정 리뷰입니다.\n".format(score * 100))
     # else:
     #     print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
 
 
-# sentiment_predict('조금 재밌음')
-# sentiment_predict("많이 재밌음")
-# sentiment_predict("이딴게 영화냐 ㅉㅉ")
-# sentiment_predict("감독 뭐하는 놈이냐?")
-# sentiment_predict('와 개쩐다 정말 세계관 최강자들의 영화다')
+print(sentiment_predict('다음에 또 오고 싶어요'))
+print(sentiment_predict('마싯다'))
