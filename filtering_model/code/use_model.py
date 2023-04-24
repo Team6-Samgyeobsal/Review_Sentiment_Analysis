@@ -52,5 +52,5 @@ def filtering_predict(s):
     #     print("{:.2f}% 확률로 부정 리뷰입니다.\n".format((1 - score) * 100))
 
 
-print(filtering_predict('뭐하는 새끼지?'))
-print(filtering_predict('너무 피곤하다'))
+print(filtering_predict('시발 이게 요리냐?'))
+print(filtering_predict('너무 맛있어요!'))
